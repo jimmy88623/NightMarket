@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nightmarket/Home/home_page.dart';
+import 'package:nightmarket/Home/menu.dart';
 
 
 class ButtonbarPage extends StatefulWidget {
@@ -67,7 +67,7 @@ class _ButtonbarPageState extends State<ButtonbarPage> {
   Future<List<Widget>> _buildScreen() async {
 
     return [
-      HomePage(),
+      Menu(),
       Placeholder(),
       Placeholder(),
       Placeholder()
