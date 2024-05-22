@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nightmarket/Home/home.dart';
+import 'package:nightmarket/Home/set.dart';
 
 class Menu extends StatefulWidget {
   const Menu({Key? key}) : super(key: key);
@@ -28,7 +29,7 @@ class _MenuState extends State<Menu> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('歡迎來到 Ya市家庭~~'),
+        title: Text('歡迎來到Ya市家族~~'),
       ),
       body: _pages[_selectedIndex],
       drawer: Drawer(
@@ -50,7 +51,7 @@ class _MenuState extends State<Menu> {
               },
             ),
             ListTile(
-              title: const Text('成員'),
+              title: const Text('設定'),
               onTap: () {
                 _menuTapHandler(1);
               },
