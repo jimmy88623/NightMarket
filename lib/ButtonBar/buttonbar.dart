@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nightmarket/Food Illustration/food.dart';
 import 'package:nightmarket/Home/menu.dart';
 import 'package:nightmarket/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,7 @@ class _ButtonbarPageState extends State<ButtonbarPage> {
 
   final List<Widget> _pages = [
     Menu(),
-    Placeholder(),
+    Food(),
     Camera(),
     Placeholder(),
   ];
