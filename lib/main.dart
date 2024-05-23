@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:nightmarket/ButtonBar/buttonbar.dart';
+import 'package:nightmarket/Theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -13,20 +20,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.green[700],
-      ),
-      home: const Scaffold(
-        // appBar: AppBar(
-        //   title: const Text('Ya市'),
-        //   centerTitle: true ,
-        //   elevation: 2,
-        // ),
+      debugShowCheckedModeBanner: false,
+
+      home: Scaffold(
         body: ButtonbarPage(),
       ),
     );

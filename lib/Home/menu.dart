@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nightmarket/Home/home.dart';
 import 'package:nightmarket/Home/set.dart';
+import 'package:nightmarket/Theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class Menu extends StatefulWidget {
   const Menu({Key? key}) : super(key: key);
@@ -15,7 +17,7 @@ class _MenuState extends State<Menu> {
 
   static const List<Widget> _pages = [
     Home(),
-    Center(child: Text('成員頁面')),
+    Set(),
   ];
 
   void _menuTapHandler(int index) {
@@ -27,10 +29,16 @@ class _MenuState extends State<Menu> {
 
   @override
   Widget build(BuildContext context) {
+
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('歡迎來到Ya市家族~~'),
+        backgroundColor: themeProvider.themeData.appBarTheme.backgroundColor,
+        iconTheme: themeProvider.themeData.appBarTheme.iconTheme ,
+        titleTextStyle: themeProvider.themeData.appBarTheme.titleTextStyle,
       ),
+      backgroundColor: themeProvider.themeData.primaryColor,
       body: _pages[_selectedIndex],
       drawer: Drawer(
         child: ListView(

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:nightmarket/Home/menu.dart';
+import 'package:nightmarket/Theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 
 class ButtonbarPage extends StatefulWidget {
-  const ButtonbarPage({Key? key}) : super(key: key);
+  const ButtonbarPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _ButtonbarPageState();
@@ -19,47 +21,56 @@ class _ButtonbarPageState extends State<ButtonbarPage> {
   }
 
   @override
+  void initState(){
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: Colors.black,
-        selectedItemColor: Colors.blue,
-        currentIndex: _currentPageIndex,
-        onTap: (currentPageIndex) {
-          print("現在所在頁面 : $currentPageIndex");
-          _onPageChanged(currentPageIndex);
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.food_bank),
-            label: 'Food Illustration',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.camera),
-            label: 'Camera',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-        ],
-      ),
-      body: FutureBuilder<List<Widget>>(
-        future: _buildScreen(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return snapshot.data![_currentPageIndex];
-          }
-        },
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      // theme: Provider.of<ThemeProvider>(context).themeData,
+      home: Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          unselectedItemColor: Provider.of<ThemeProvider>(context).themeData.colorScheme.secondary,
+          selectedItemColor: Colors.blue,
+          currentIndex: _currentPageIndex,
+          onTap: (currentPageIndex) {
+            print("現在所在頁面 : $currentPageIndex");
+            _onPageChanged(currentPageIndex);
+          },
+          items:  [
+            BottomNavigationBarItem(
+              backgroundColor: Provider.of<ThemeProvider>(context).themeData.primaryColor,
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.food_bank),
+              label: 'Food Illustration',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.photo_camera),
+              label: 'Camera',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: 'Search',
+            ),
+          ],
+        ),
+        body: FutureBuilder<List<Widget>>(
+          future: _buildScreen(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              return snapshot.data![_currentPageIndex];
+            }
+          },
+        ),
       ),
     );
   }
@@ -67,6 +78,7 @@ class _ButtonbarPageState extends State<ButtonbarPage> {
   Future<List<Widget>> _buildScreen() async {
 
     return [
+      // Placeholder(),
       Menu(),
       Placeholder(),
       Placeholder(),
