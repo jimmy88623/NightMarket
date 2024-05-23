@@ -4,8 +4,6 @@ import 'package:nightmarket/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:nightmarket/Camera/camera.dart';
 
-
-
 class ButtonbarPage extends StatefulWidget {
   const ButtonbarPage({super.key});
 
@@ -16,6 +14,13 @@ class ButtonbarPage extends StatefulWidget {
 class _ButtonbarPageState extends State<ButtonbarPage> {
   int _currentPageIndex = 0;
 
+  final List<Widget> _pages = [
+    Menu(),
+    Placeholder(),
+    Camera(),
+    Placeholder(),
+  ];
+
   void _onPageChanged(int index) {
     setState(() {
       _currentPageIndex = index;
@@ -23,15 +28,9 @@ class _ButtonbarPageState extends State<ButtonbarPage> {
   }
 
   @override
-  void initState(){
-    super.initState();
-  }
-  @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // theme: Provider.of<ThemeProvider>(context).themeData,
       home: Scaffold(
         bottomNavigationBar: BottomNavigationBar(
           unselectedItemColor: Provider.of<ThemeProvider>(context).themeData.colorScheme.secondary,
@@ -41,7 +40,7 @@ class _ButtonbarPageState extends State<ButtonbarPage> {
             print("現在所在頁面 : $currentPageIndex");
             _onPageChanged(currentPageIndex);
           },
-          items:  [
+          items: [
             BottomNavigationBarItem(
               backgroundColor: Provider.of<ThemeProvider>(context).themeData.primaryColor,
               icon: Icon(Icons.home),
@@ -61,30 +60,11 @@ class _ButtonbarPageState extends State<ButtonbarPage> {
             ),
           ],
         ),
-        body: FutureBuilder<List<Widget>>(
-          future: _buildScreen(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else {
-              return snapshot.data![_currentPageIndex];
-            }
-          },
+        body: IndexedStack(
+          index: _currentPageIndex,
+          children: _pages,
         ),
       ),
     );
-  }
-
-  Future<List<Widget>> _buildScreen() async {
-
-    return [
-      // Placeholder(),
-      Menu(),
-      Placeholder(),
-      Camera(),
-      Placeholder()
-    ];
   }
 }
