@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nightmarket/Home/menu.dart';
 import 'package:nightmarket/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:nightmarket/Camera/camera.dart';
+
 
 
 class ButtonbarPage extends StatefulWidget {
@@ -81,7 +83,7 @@ class _ButtonbarPageState extends State<ButtonbarPage> {
       // Placeholder(),
       Menu(),
       Placeholder(),
-      Placeholder(),
+      Camera(),
       Placeholder()
     ];
   }
