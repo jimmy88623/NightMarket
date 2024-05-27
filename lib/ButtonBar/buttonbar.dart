@@ -4,6 +4,8 @@ import 'package:nightmarket/Home/menu.dart';
 import 'package:nightmarket/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:nightmarket/Camera/camera.dart';
+import 'package:nightmarket/Search/search.dart';
+
 
 class ButtonbarPage extends StatefulWidget {
   const ButtonbarPage({super.key});
@@ -19,7 +21,7 @@ class _ButtonbarPageState extends State<ButtonbarPage> {
     Menu(),
     Food(),
     Camera(),
-    Placeholder(),
+    SearchPage(),
   ];
 
   void _onPageChanged(int index) {
