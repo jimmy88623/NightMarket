@@ -34,8 +34,8 @@ class _ButtonbarPageState extends State<ButtonbarPage> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         bottomNavigationBar: BottomNavigationBar(
-          unselectedItemColor: Provider.of<ThemeProvider>(context).themeData.colorScheme.secondary,
-          selectedItemColor: Colors.blue,
+          unselectedItemColor: Provider.of<ThemeProvider>(context).themeData.bottomNavigationBarTheme.unselectedItemColor,
+          selectedItemColor: Provider.of<ThemeProvider>(context).themeData.bottomNavigationBarTheme.selectedItemColor,
           currentIndex: _currentPageIndex,
           onTap: (currentPageIndex) {
             print("現在所在頁面 : $currentPageIndex");
@@ -43,7 +43,7 @@ class _ButtonbarPageState extends State<ButtonbarPage> {
           },
           items: [
             BottomNavigationBarItem(
-              backgroundColor: Provider.of<ThemeProvider>(context).themeData.primaryColor,
+              backgroundColor: Provider.of<ThemeProvider>(context).themeData.bottomNavigationBarTheme.backgroundColor ,
               icon: Icon(Icons.home),
               label: 'Home',
             ),

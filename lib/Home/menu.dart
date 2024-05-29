@@ -32,11 +32,14 @@ class _MenuState extends State<Menu> {
 
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('歡迎來到Ya市家族~~'),
-        backgroundColor: themeProvider.themeData.appBarTheme.backgroundColor,
-        iconTheme: themeProvider.themeData.appBarTheme.iconTheme ,
-        titleTextStyle: themeProvider.themeData.appBarTheme.titleTextStyle,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(75.0),
+        child: AppBar(
+          title: Text('歡迎來到Ya市家族~~'),
+          backgroundColor: themeProvider.themeData.appBarTheme.backgroundColor,
+          iconTheme: themeProvider.themeData.appBarTheme.iconTheme ,
+          titleTextStyle: themeProvider.themeData.appBarTheme.titleTextStyle,
+        ),
       ),
       backgroundColor: themeProvider.themeData.primaryColor,
       body: _pages[_selectedIndex],

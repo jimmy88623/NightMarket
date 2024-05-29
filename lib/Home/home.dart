@@ -95,10 +95,30 @@ class _HomeState extends State<Home> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              Container(
+                padding: EdgeInsets.only(left: 32.0),
+                height: MediaQuery.of(context).size.width * 0.2,
+                // color: Colors.red,
+                child: const Row(
+                  children: [
+                    Icon(
+                      Icons.record_voice_over,
+                      size: 30,
+                    ),
+                    SizedBox(width: 20),
+                    Text(
+                      '最新消息',
+                      style: TextStyle(
+                        fontSize: 24,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Stack(
                 children: [
                   SizedBox(
-                    width: double.infinity,
+                    width: MediaQuery.of(context).size.width*0.95,
                     height: MediaQuery.of(context).size.height / 4,
                     child: PageView.builder(
                       controller: _pageController,
@@ -171,45 +191,25 @@ class _HomeState extends State<Home> {
                   ),
                 ],
               ),
-              Container(
-                padding: EdgeInsets.only(left: 32.0),
-                height: MediaQuery.of(context).size.width * 0.2,
-                // color: Colors.red,
-                child: const Row(
-                  children: [
-                    Icon(
-                      Icons.record_voice_over,
-                      size: 30,
-                    ),
-                    SizedBox(width: 20),
-                    Text(
-                      '最新消息',
-                      style: TextStyle(
-                        fontSize: 24,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Column(
-                children: itemList.map((item) {
-                  return Card(
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                    elevation: 5,
-                    child: ListTile(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      title: Text(item),
-                      tileColor: Colors.orangeAccent,
-                      onTap: () {},
-                      leading: const Icon(Icons.star_border_outlined),
-                      trailing: const Icon(Icons.menu),
-                    ),
-                  );
-                }).toList(),
-              ),
+              // Column(
+              //   children: itemList.map((item) {
+              //     return Card(
+              //       margin:
+              //           const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              //       elevation: 5,
+              //       child: ListTile(
+              //         shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(15),
+              //         ),
+              //         title: Text(item),
+              //         tileColor: Colors.orangeAccent,
+              //         onTap: () {},
+              //         leading: const Icon(Icons.star_border_outlined),
+              //         trailing: const Icon(Icons.menu),
+              //       ),
+              //     );
+              //   }).toList(),
+              // ),
             ],
           ),
         ),
