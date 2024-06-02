@@ -63,7 +63,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
       // 读取图像并旋转
       final originalImage = img.decodeImage(await _image!.readAsBytes());
-      final fixedImage = img.copyRotate(originalImage!, 90); // 旋转90度
+      final fixedImage = img.copyRotate(originalImage!, angle: 90); // 旋转90度
 
       // 缩放图像以匹配预览框的大小
       final resizedImage = img.copyResize(fixedImage, width: 400, height: 400); // 调整大小为预览框的大小

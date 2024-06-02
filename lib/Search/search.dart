@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-
+import 'package:nightmarket/SpeechToPage/SpeechRecognitionPage.dart';
 
 
 class SearchPage extends StatefulWidget {
@@ -37,66 +37,87 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme
-              .of(context)
-              .colorScheme
-              .primary,
-          foregroundColor: Theme
-              .of(context)
-              .colorScheme
-              .onPrimary,
-          title: const Text('極致智能旅遊APP'),
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.deepOrange,
+          title: Center(
+            child: const Text(
+              'NIGHT MARKET FOOD',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(3),
+            child: Container(
+              color: Colors.indigo,
+              height: 3,
+            ),
+          ),
         ),
         // 重要 FutureBuilder
         body: Column(
           children: [
-            Row(
-              children: [
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.redAccent,
-                      foregroundColor: Colors.white,
-                      fixedSize: const Size(160, 50),
-                    ),
-                    onPressed: (){},
-                    // onPressed: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) =>
-                    //       const SpeechRecognitionPage(
-                    //
-                    //       ),
-                    //     ),
-                    //   );
-                    // },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        "語音辨識",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    )),
-                Expanded(
+            Padding(
+              padding: const EdgeInsets.only(top:20, left:16, right:16),
+              child: Container(
                   child: TextField(
                     decoration: InputDecoration(
                       labelText: 'Search',
-                      prefixIcon: Icon(Icons.search),
+                      enabledBorder: OutlineInputBorder(                              //還沒點擊時外框顏色
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          borderSide: BorderSide(
+                              color: Colors.indigo,
+                              width:3
+                          )
+                      ),
+                      focusedBorder:  OutlineInputBorder(                             //點擊時外框顏色
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          borderSide: BorderSide(
+                              color: Colors.indigo,
+                              width:3
+                          )
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          borderSide: BorderSide(
+                            color: Colors.indigo,
+                            width:3
+                          )
+                      ),
+                      suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const SpeechRecognitionPage(
+
+                                      ),
+                                    ),
+                                  );
+                                }, // 刷新
+                                color: Colors.deepOrange,
+                                icon: Icon(Icons.mic)),
+                            IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    // 刷新
+                                  });
+                                },
+                                color: Colors.deepOrange,
+                                icon: Icon(Icons.search)),
+                          ],
+                        )
                     ),
                     onChanged: (value) {
                       keyWord = value;
                     }, //onChanged,只要輸入內容有改變就會觸發
                   ),
-                ),
-                IconButton(
-                    onPressed: () {
-                      setState(() {
-                        // 刷新
-                      });
-                    },
-                    icon: Icon(Icons.search))
-              ],
+              ),
             ),
+
             Expanded(
               child: FutureBuilder<Map<String, dynamic>>(
                 future: loadData(),
@@ -119,7 +140,8 @@ class _SearchPageState extends State<SearchPage> {
 
                     // 重要 ListView.builder
                     return ListView.builder(
-                      itemCount: data!["SEARCH"].length,
+                      itemCount: newData.length,
+                      // itemCount: data!["SEARCH"].length,
                       itemBuilder: (BuildContext context, int index) {
                         // 重要 手勢感測元件
                         return GestureDetector(
@@ -137,7 +159,7 @@ class _SearchPageState extends State<SearchPage> {
                           // },
                           // 重要 在App上要顯示的內容
                           child: CardWidget(
-                              item: data['SEARCH'][index]),
+                              item: data!['SEARCH'][index]),
                         );
                       },
                     );
