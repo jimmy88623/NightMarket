@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nightmarket/ButtonBar/buttonbar.dart';
 import 'package:nightmarket/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:nightmarket/login/loginPage.dart';
 
 void main() {
   runApp(
@@ -24,9 +25,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-
       home: Scaffold(
-        body: ButtonbarPage(),
+        body: LoginPage(),
       ),
     );
   }
