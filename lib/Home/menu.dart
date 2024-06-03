@@ -29,13 +29,20 @@ class _MenuState extends State<Menu> {
 
   @override
   Widget build(BuildContext context) {
-
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(75.0),
+        preferredSize:
+            Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
         child: AppBar(
-          title: Text('歡迎來到Ya市家族~~'),
+          flexibleSpace: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.25, // 调整高度以确保图片适合
+            width: double.infinity,
+            child: Image.asset(
+              'assets/title_bottom.png',
+              fit: BoxFit.contain,
+            ),
+          ),
           backgroundColor: themeProvider.themeData.appBarTheme.backgroundColor,
           iconTheme: themeProvider.themeData.appBarTheme.iconTheme ,
           titleTextStyle: themeProvider.themeData.appBarTheme.titleTextStyle,

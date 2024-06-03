@@ -17,6 +17,8 @@ final List<String> imagePaths = [
   "assets/nightmarket2.jpg",
   "assets/nightmarket3.jpg"
 ];
+
+final List<String> captions = ["test 1 ","test 2 ","test 3 "];
 late List<Widget> _pages;
 
 int _activePage = 0;
@@ -24,19 +26,6 @@ int _activePage = 0;
 final PageController _pageController = PageController(initialPage: 0);
 
 Timer? _timer;
-
-List<String> itemList = [
-  "night market news example 1",
-  "night market news example 2",
-  "night market news example 3",
-  "night market news example 4",
-  "night market news example 5",
-  "night market news example 6",
-  "night market news example 7",
-  "night market news example 8",
-  "night market news example 9",
-  "night market news example 10"
-];
 
 class _HomeState extends State<Home> {
   void startTimer() {
@@ -74,8 +63,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _pages = List.generate(imagePaths.length,
-        (index) => ImagePlaceholder(imagePath: imagePaths[index]));
+    _pages = List.generate(imagePaths.length, (index) => ImageWithCaption(imagePath: imagePaths[index], caption: captions[index]));
     startTimer();
   }
 
@@ -91,14 +79,12 @@ class _HomeState extends State<Home> {
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeProvider>(context).themeData,
       home: Scaffold(
-        // backgroundColor: Theme.of(context).colorScheme.surface,
         body: SingleChildScrollView(
           child: Column(
             children: [
               Container(
                 padding: EdgeInsets.only(left: 32.0),
                 height: MediaQuery.of(context).size.width * 0.2,
-                // color: Colors.red,
                 child: const Row(
                   children: [
                     Icon(
@@ -115,11 +101,12 @@ class _HomeState extends State<Home> {
                   ],
                 ),
               ),
+              SizedBox(height: MediaQuery.of(context).size.height*0.02,),
               Stack(
                 children: [
                   SizedBox(
                     width: MediaQuery.of(context).size.width*0.95,
-                    height: MediaQuery.of(context).size.height / 4,
+                    height: MediaQuery.of(context).size.height / 3,
                     child: PageView.builder(
                       controller: _pageController,
                       itemCount: imagePaths.length,
@@ -134,7 +121,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   Positioned(
-                    bottom: 10,
+                    bottom: 60,
                     left: 0,
                     right: 0,
                     child: Container(
@@ -143,7 +130,7 @@ class _HomeState extends State<Home> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List<Widget>.generate(
                           _pages.length,
-                          (index) => Padding(
+                              (index) => Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: InkWell(
                               onTap: () {
@@ -153,9 +140,10 @@ class _HomeState extends State<Home> {
                               },
                               child: CircleAvatar(
                                 radius: 4,
-                                backgroundColor: _activePage == index
-                                    ? Colors.yellow
-                                    : Colors.grey,
+                                backgroundColor: Colors.transparent,
+                                // backgroundColor: _activePage == index
+                                //     ? Colors.yellow
+                                //     : Colors.grey,
                               ),
                             ),
                           ),
@@ -218,16 +206,38 @@ class _HomeState extends State<Home> {
   }
 }
 
-class ImagePlaceholder extends StatelessWidget {
-  final String? imagePath;
+class ImageWithCaption extends StatelessWidget {
+  final String imagePath;
+  final String caption;
 
-  const ImagePlaceholder({super.key, this.imagePath});
+  const ImageWithCaption({required this.imagePath, required this.caption});
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      imagePath!,
-      fit: BoxFit.cover,
+    return Stack(
+        children: [
+        Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+        ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child: Text(
+                  caption,
+                  style: TextStyle(fontSize: 24, color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+        ],
     );
   }
 }
+
