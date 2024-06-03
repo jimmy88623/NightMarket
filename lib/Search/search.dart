@@ -19,17 +19,16 @@ class _SearchPageState extends State<SearchPage> {
   List<String> favoriteDrugNames = [];
   List<String> indications = [];
   List<String> favoriteDrugPicsURL = [];
+  final TextEditingController _controller = TextEditingController();
+
 
   // 載入資料(DLI and DA)
   Future<Map<String, dynamic>> loadData() async {
     String jsonSEARCHString = await rootBundle.loadString(
         'assets/data/SEARCH.json');
-
-
     Map<String, dynamic> data = {
       "SEARCH": jsonDecode(jsonSEARCHString),
     };
-
     return data;
   }
 
@@ -88,15 +87,19 @@ class _SearchPageState extends State<SearchPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                                onPressed: () {
-                                  Navigator.push(
+                                onPressed: () async{
+                                  final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const SpeechRecognitionPage(
-
-                                      ),
+                                      builder: (context) => const SpeechRecognitionPage(),
                                     ),
                                   );
+                                  if (result != null){
+                                    setState(() {
+                                      keyWord = result;
+                                      _controller.text = "$result";
+                                    });
+                                  }
                                 }, // 刷新
                                 color: Colors.deepOrange,
                                 icon: Icon(Icons.mic)),
@@ -111,6 +114,7 @@ class _SearchPageState extends State<SearchPage> {
                           ],
                         )
                     ),
+                    controller: _controller,
                     onChanged: (value) {
                       keyWord = value;
                     }, //onChanged,只要輸入內容有改變就會觸發

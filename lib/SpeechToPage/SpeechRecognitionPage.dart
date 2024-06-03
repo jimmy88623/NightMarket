@@ -47,6 +47,7 @@ class _SpeechRecognitionPageState extends State<SpeechRecognitionPage> {
       }
     }else{
       setState(() => _isListening = false);
+      Navigator.pop(context,"香腸");
       _speech.stop();
     }
   }
