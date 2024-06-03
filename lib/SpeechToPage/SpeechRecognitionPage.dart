@@ -18,7 +18,7 @@ class SpeechRecognitionPage extends StatefulWidget {
 class _SpeechRecognitionPageState extends State<SpeechRecognitionPage> {
   late stt.SpeechToText _speech;
   bool _isListening = false;
-  String _text = '';
+  String _text = 'ボタンを押して話し始めてください';
 
   @override
   void initState() {
@@ -39,6 +39,7 @@ class _SpeechRecognitionPageState extends State<SpeechRecognitionPage> {
               setState(() {
                 _text = val.recognizedWords;
               }),
+              localeId: 'ja_JP',      //設置語言為日文
         );
       } else {
         setState(() => _isListening = false);
