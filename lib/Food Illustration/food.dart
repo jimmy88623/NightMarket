@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:nightmarket/Food%20Illustration/StarClass.dart';
 import 'package:nightmarket/Food%20Illustration/food.dart';
 import 'package:nightmarket/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:nightmarket/Food Illustration/Food_Widget.dart';
+import 'package:nightmarket/Food Illustration/favoritePage.dart';
 
 class Food extends StatefulWidget {
   const Food({super.key});
@@ -17,17 +19,18 @@ class Food extends StatefulWidget {
 
 class _FoodState extends State<Food> {
 
-  late Map<String,dynamic> foodItems;
+  late Map<String,dynamic> cn_foodItems;
+  late Map<String,dynamic> jp_foodItems;
   bool _isLoading = true;
 
   Future<void> loadJsonData() async {
     // 加載並讀取 test.json 文件
-    String jsonData = await rootBundle.loadString('assets/test.json');
-
+    String cn_jsonData = await rootBundle.loadString('assets/food_cn.json');
+    String jp_jsonData = await rootBundle.loadString('assets/food_jp.json');
     setState(() {
-      foodItems = json.decode(jsonData);
+      cn_foodItems = json.decode(cn_jsonData);
+      jp_foodItems = json.decode(jp_jsonData);
       _isLoading = false;
-      print("foodItems:$foodItems");
     });
   }
   @override
@@ -64,12 +67,10 @@ class _FoodState extends State<Food> {
           ),
           body: TabBarView(
             children: [
-              FoodWidget(foodItems: foodItems,keyword: '鹹食',),
-              FoodWidget(foodItems: foodItems,keyword: '甜食',),
-              FoodWidget(foodItems: foodItems,keyword: '飲料',),
-              Container(
-                child:const Icon(Icons.home),
-              ),
+              FoodWidget(cn_foodItems: cn_foodItems,jp_foodItems: jp_foodItems,keyword: 'Salty',),
+              FoodWidget(cn_foodItems: cn_foodItems,jp_foodItems: jp_foodItems,keyword: 'Sweet',),
+              FoodWidget(cn_foodItems: cn_foodItems,jp_foodItems: jp_foodItems,keyword: 'Drink',),
+              favoritePage(),
             ],
           ),
         ),
