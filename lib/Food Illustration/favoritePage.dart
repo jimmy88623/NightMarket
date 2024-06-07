@@ -1,23 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:nightmarket/Food Illustration/StarClass.dart'; // 导入 FavoriteClass
+import 'package:shared_preferences/shared_preferences.dart';
 
-class favoritePage extends StatelessWidget {
+class LikedItemsPage extends StatefulWidget {
+  @override
+  _LikedItemsPageState createState() => _LikedItemsPageState();
+}
+
+class _LikedItemsPageState extends State<LikedItemsPage> {
+  late List<Map<String, dynamic>> _likedItems;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLikedItems();
+  }
+
+  // 加载喜欢的项目
+  Future<void> _loadLikedItems() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<Map<String, dynamic>> allItems = [
+      // 替换为你获取所有项目的逻辑
+      {"itemKey": "Item 1", "isLiked": prefs.getBool("Item 1") ?? false},
+      {"itemKey": "Item 2", "isLiked": prefs.getBool("Item 2") ?? false},
+      // 添加更多项目
+    ];
+
+    setState(() {
+      _likedItems = allItems.where((item) => item['isLiked']).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final favoriteClass = Provider.of<FavoriteClass>(context); // 获取 FavoriteClass 实例
-    final favoriteItems = favoriteClass.favoriteItem; // 获取最爱项列表
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Favorite Items'),
+        title: Text('Liked Items'),
       ),
       body: ListView.builder(
-        itemCount: favoriteItems.length,
+        itemCount: _likedItems.length,
         itemBuilder: (context, index) {
-          final item = favoriteItems[index];
+          final item = _likedItems[index];
           return ListTile(
-            title: Text(item.name),
+            title: Text(item['itemKey']),
+            // 添加更多项目信息
           );
         },
       ),

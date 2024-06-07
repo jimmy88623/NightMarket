@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:nightmarket/Food Illustration/FoodDetail.dart';
-
 class FoodWidget extends StatefulWidget {
   final Map<String, dynamic> cn_foodItems;
   final Map<String, dynamic> jp_foodItems;
   final String keyword;
 
-  const FoodWidget({Key? key,required this.keyword, required this.cn_foodItems,required this.jp_foodItems})
+  const FoodWidget(
+      {Key? key,
+      required this.keyword,
+      required this.cn_foodItems,
+      required this.jp_foodItems})
       : super(key: key);
 
   @override
@@ -15,7 +18,7 @@ class FoodWidget extends StatefulWidget {
 
 class _FoodWidgetState extends State<FoodWidget> {
   final SearchController searchController = SearchController();
-  late  Map<String, dynamic> foodItems;
+  late Map<String, dynamic> foodItems;
   late List<String> filteredItems;
   String dropdownValue = "Chinese";
   String searchFood = "";
@@ -56,7 +59,10 @@ class _FoodWidgetState extends State<FoodWidget> {
   @override
   Widget build(BuildContext context) {
     List<String> displayedItems = searchFood.isNotEmpty
-        ? filteredItems.where((key) => key.toLowerCase().contains(searchFood.toLowerCase())).toList()
+        ? filteredItems
+            .where(
+                (key) => key.toLowerCase().contains(searchFood.toLowerCase()))
+            .toList()
         : filteredItems;
 
     return GestureDetector(
@@ -77,11 +83,10 @@ class _FoodWidgetState extends State<FoodWidget> {
               onChanged: (value) {
                 setState(() {
                   dropdownValue = value!;
-                  if(dropdownValue == "Chinese"){
+                  if (dropdownValue == "Chinese") {
                     foodItems = widget.cn_foodItems;
                     _filterItems();
-                  }
-                  else{
+                  } else {
                     foodItems = widget.jp_foodItems;
                     _filterItems();
                   }
@@ -142,6 +147,7 @@ class _FoodWidgetState extends State<FoodWidget> {
                               builder: (context) => FoodDetailPage(
                                 item: item,
                                 itemKey: key,
+                                language: dropdownValue,
                               ),
                             ),
                           );
@@ -149,17 +155,21 @@ class _FoodWidgetState extends State<FoodWidget> {
                         child: ClipOval(
                           child: item['img_url'].isEmpty
                               ? Image.asset(
-                            'assets/hokaido.jpg',
-                            fit: BoxFit.cover,
-                            width: MediaQuery.of(context).size.width * 0.1,
-                            height: MediaQuery.of(context).size.width * 0.1,
-                          )
+                                  'assets/hokaido.jpg',
+                                  fit: BoxFit.cover,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                )
                               : Image.network(
-                            item['img_url'],
-                            fit: BoxFit.cover,
-                            width: MediaQuery.of(context).size.width * 0.1,
-                            height: MediaQuery.of(context).size.width * 0.1,
-                          ),
+                                  item['img_url'],
+                                  fit: BoxFit.cover,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                ),
                         ),
                       ),
                     ),

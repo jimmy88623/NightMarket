@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:nightmarket/Food%20Illustration/StarClass.dart';
 import 'package:nightmarket/Food%20Illustration/food.dart';
 import 'package:nightmarket/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -70,7 +69,7 @@ class _FoodState extends State<Food> {
               FoodWidget(cn_foodItems: cn_foodItems,jp_foodItems: jp_foodItems,keyword: 'Salty',),
               FoodWidget(cn_foodItems: cn_foodItems,jp_foodItems: jp_foodItems,keyword: 'Sweet',),
               FoodWidget(cn_foodItems: cn_foodItems,jp_foodItems: jp_foodItems,keyword: 'Drink',),
-              favoritePage(),
+              LikedItemsPage(),
             ],
           ),
         ),
