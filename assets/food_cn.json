@@ -1,0 +1,34 @@
+{
+   "蚵仔煎": {
+    "another_name": "牡蠣オムレツ（カキオムレツ）",
+    "category":"Salty",
+    "introduce": "蚵仔煎是台灣夜市常見的傳統小吃，以新鮮的生蚵仔與蛋液及麵粉混合後，倒入鐵板上並加上青菜煎熟，外酥內嫩，香氣四溢，常配上特製醬料及蒜泥辣椒，美味可口。",
+    "key_word": ["蚵仔","蛋液","麵粉","煎熟"],
+    "remind": ["辣椒醬"],
+    "img_url": ""
+  },
+  "雞排": {
+    "another_name": "チキンカツ",
+    "category":"Salty",
+    "introduce": "雞排是台灣夜市經典小吃，以大塊去骨雞肉裹上麵粉、地瓜粉或麵包粉後油炸至金黃酥脆，外酥內嫩，風味絕佳。",
+    "key_word": ["雞肉","油炸"],
+    "remind": ["辣粉"],
+    "img_url": ""
+  },
+  "牛肉麵": {
+    "another_name": "ぎゅうにくめん",
+    "category":"Salty",
+    "introduce": "牛肉麵是台灣著名的麵食，以軟嫩的牛肉塊、Q彈的麵條加上牛骨高湯下鍋炖煮，常搭配青菜和酸菜，口味濃郁，深受喜愛。",
+    "key_word": ["牛肉","麵條","炖煮"],
+    "remind": ["辣粉"],
+    "img_url": "https://i.imgur.com/ueZEPNi.png"
+  },
+   "小籠包": {
+     "another_name": "しょうろんぽう",
+    "category":"Salty",
+    "introduce": "小籠包是台灣夜市著名小吃，以薄薄的麵皮包裹豬肉餡和濃郁的湯汁，經過蒸煮後，口感細膩、湯汁豐富，入口即化，常搭配薑絲和醋。",
+    "key_word": ["豬肉","麵皮","蒸煮"],
+    "remind": [],
+    "img_url": "https://i.imgur.com/BDIWYdC.png"
+  }
+}
