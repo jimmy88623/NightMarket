@@ -9,8 +9,6 @@ class FoodDetailPage extends StatefulWidget {
   final String itemKey;
   final String language;
 
-  // final Map<String, dynamic> cn_item;
-
   const FoodDetailPage({
     Key? key,
     required this.item,
@@ -25,47 +23,21 @@ class FoodDetailPage extends StatefulWidget {
 class _FoodDetailPageState extends State<FoodDetailPage> {
   final Future<SharedPreferences> pres = SharedPreferences.getInstance();
   bool isLiked = false;
-  //
-  // @override
-  // void initState(){
-  //   super.initState();
-  //   _loadLikedStatus();
-  // }
-  // Future<void> _loadLikedStatus() async {
-  //   final SharedPreferences prefs = await pres;
-  //   setState(() {
-  //     isLiked = prefs.getBool(widget.itemKey) ?? false;
-  //   });
-  // }
-  //
-  // Future<void> _toggleLikedStatus() async {
-  //   final SharedPreferences prefs = await pres;
-  //   setState(() {
-  //     isLiked = !isLiked;
-  //   });
-  //   prefs.setBool(widget.itemKey, isLiked);
-  //
-  //   List<String> itemKeys = prefs.getStringList('itemKeys') ?? [];
-  //   if (!itemKeys.contains(widget.itemKey)) {
-  //     itemKeys.add(widget.itemKey);
-  //   }
-  //   prefs.setStringList('itemKeys', itemKeys);
-  // }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final likeProvider = Provider.of<LikeProvider>(context, listen: false);
-      // 检查是否已经存在于 Provider 中，如果不存在则添加默认值
       if (!likeProvider.likedItems.containsKey(widget.itemKey)) {
         likeProvider.addItem(widget.itemKey, false); // 初始化为未喜欢
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     print("傳進來的食物有:${widget.itemKey}");
-    // 使用 Provider 來提供狀態
     return Theme(
       data: Provider.of<ThemeProvider>(context).themeData,
       child: Scaffold(
@@ -83,15 +55,14 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                   children: [
                     widget.item['img_url'].isNotEmpty
                         ? ClipOval(
-                            child: Image.network(
-                              widget.item['img_url'],
-                              fit: BoxFit.contain,
-                              width: 100,
-                              height: 100,
-                            ),
-                          )
+                      child: Image.network(
+                        widget.item['img_url'],
+                        fit: BoxFit.contain,
+                        width: 100,
+                        height: 100,
+                      ),
+                    )
                         : SizedBox(width: 100, height: 100),
-                    // 若无图像则使用固定大小的 SizedBox
                     SizedBox(width: MediaQuery.of(context).size.width * 0.1),
                     Expanded(
                       flex: 2,
@@ -126,7 +97,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                           ),
                           IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.record_voice_over)),
+                              icon: Icon(Icons.volume_down)),
                         ],
                       ),
                     )
@@ -148,62 +119,67 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                 if (widget.item['remind'].isNotEmpty)
                   Row(
                     children: [
-                      IconButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Icon(Icons.warning_amber),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(widget.item['remind'].join(',')),
-                                    const SizedBox(height: 10),
-                                    Image.network(widget.item['img_url']),
-                                    const SizedBox(height: 10),
-                                    Text(widget.item['key_word'].join(',')),
-                                    if (widget.language == "Japanese")
-                                      Text('不要' +
-                                          widget.item['remind'].join(','))
-                                    else
-                                      Text('不要' +
-                                          widget.item['remind'].join(',')),
-                                    const SizedBox(height: 10),
-                                    // 替换为你想要添加的内容
-                                  ],
-                                ),
-                                actions: [
-                                  Center(
-                                    child: IconButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      icon: const Text('Close'),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.warning_amber),
+                      const IconButton(
+                        onPressed: null,
+                        icon: Icon(Icons.warning_amber,color: Colors.orangeAccent,),
                       ),
                       Expanded(
-                        child: Text(
-                          widget.item['remind'].join(','),
-                          style: const TextStyle(fontSize: 20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: widget.item['remind'].map<Widget>((remindItem) {
+                            return GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Icon(Icons.warning_amber,color: Colors.orangeAccent,),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text(remindItem),
+                                          const SizedBox(height: 10),
+                                          Image.network(widget.item['img_url']),
+                                          const SizedBox(height: 10),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text("不要"+remindItem),
+                                              // SizedBox(width: MediaQuery.of(context).size.width*0.02,),
+                                              IconButton(
+                                                onPressed: (){},
+                                                icon: const Icon(Icons.volume_down),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                        ],
+                                      ),
+                                      actions: [
+                                        Center(
+                                          child: IconButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            icon: const Text('Close'),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Text(
+                                remindItem+' ',
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                            );
+                          }).toList(),
                         ),
                       ),
                     ],
                   ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Close'),
-                ),
               ],
             ),
           ),
@@ -212,6 +188,3 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
     );
   }
 }
-
-
-

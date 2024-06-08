@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           Center(
             child: Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(20.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -95,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: MediaQuery.of(context).size.width*0.04),
                   TextField(
                     controller: _passwordController,
                     decoration: const InputDecoration(
@@ -112,7 +112,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     obscureText: true,
                   ),
-                  SizedBox(height: 20),
+
+                  SizedBox(height: MediaQuery.of(context).size.width*0.04),
                   OutlinedButton(
                     onPressed: _login,
                     style: ElevatedButton.styleFrom(
@@ -141,18 +142,28 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Center(
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         IconButton(
-                          onPressed: (){},
-                          icon:Image.asset('assets/google.png',height: 50,width: 50,)
+                          onPressed: () {},
+                          icon: ClipOval(
+                            child: Image.asset('assets/google.png',
+                                height: 50, width: 50),
+                          ),
                         ),
                         IconButton(
-                            onPressed: (){},
-                            icon:Image.asset('assets/line.png',height: 50,width: 50,)
+                          onPressed: () {},
+                          icon: ClipOval(
+                            child: Image.asset('assets/line.png',
+                                height: 50, width: 50),
+                          ),
                         ),
                         IconButton(
-                            onPressed: (){},
-                            icon:Image.asset('assets/fb.png',height: 50,width: 50,)
+                          onPressed: () {},
+                          icon: ClipOval(
+                            child: Image.asset('assets/fb.png',
+                                height: 50, width: 50),
+                          ),
                         )
                       ],
                     ),
