@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nightmarket/ButtonBar/buttonbar.dart';
@@ -73,34 +75,89 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           Center(
-            child: Card(
-              margin: EdgeInsets.all(20.0),
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    TextField(
-                      controller: _emailController,
-                      decoration: InputDecoration(labelText: 'Email'),
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Color(0x80D9D9D9),
+                      labelStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter Email Here',
+                      hintStyle: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
-                    SizedBox(height: 10),
-                    TextField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(labelText: 'Password'),
-                      obscureText: true,
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    controller: _passwordController,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Color(0x80D9D9D9),
+                      labelStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter Password Here',
+                      hintStyle: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: _login,
-                      child: Text('Login'),
+                    obscureText: true,
+                  ),
+                  SizedBox(height: 20),
+                  OutlinedButton(
+                    onPressed: _login,
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: Color(0x80D9D9D9),
+                      minimumSize: Size(MediaQuery.of(context).size.width * 0.4,
+                          MediaQuery.of(context).size.width * 0.13),
                     ),
-                    TextButton(
-                      onPressed: _navigateToSignup,
-                      child: Text('Don\'t have an account? Signup'),
+                    child: const Text(
+                      'login',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                  TextButton(
+                    onPressed: _navigateToSignup,
+                    child: const Text(
+                      'Don\'t have an account? Signup',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: (){},
+                          icon:Image.asset('assets/google.png',height: 50,width: 50,)
+                        ),
+                        IconButton(
+                            onPressed: (){},
+                            icon:Image.asset('assets/line.png',height: 50,width: 50,)
+                        ),
+                        IconButton(
+                            onPressed: (){},
+                            icon:Image.asset('assets/fb.png',height: 50,width: 50,)
+                        )
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
