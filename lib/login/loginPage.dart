@@ -66,6 +66,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: AppBar(
+      //
+      // ),
       body: Stack(
         children: [
           Positioned.fill(
@@ -80,7 +83,12 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  SizedBox(height: MediaQuery.of(context).size.width * 0.2),
                   TextField(
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0
+                    ),
                     controller: _emailController,
                     decoration: const InputDecoration(
                       filled: true,
@@ -95,8 +103,12 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.width*0.04),
+                  SizedBox(height: MediaQuery.of(context).size.width * 0.04),
                   TextField(
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0
+                    ),
                     controller: _passwordController,
                     decoration: const InputDecoration(
                       filled: true,
@@ -112,8 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     obscureText: true,
                   ),
-
-                  SizedBox(height: MediaQuery.of(context).size.width*0.04),
+                  SizedBox(height: MediaQuery.of(context).size.width * 0.04),
                   OutlinedButton(
                     onPressed: _login,
                     style: ElevatedButton.styleFrom(
@@ -216,55 +227,100 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Signup'),
-      ),
-      body: Center(
-        child: Card(
-          margin: EdgeInsets.all(20.0),
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  controller: _fullNameController,
-                  decoration: InputDecoration(labelText: 'Full Name'),
-                ),
-                SizedBox(height: 10),
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(labelText: 'Email'),
-                ),
-                SizedBox(height: 10),
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(labelText: 'Password'),
-                  obscureText: true,
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _signup,
-                  child: Text('Signup'),
-                ),
-              ],
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/login.png',
+              fit: BoxFit.fill,
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home Page'),
-      ),
-      body: Center(
-        child: Text('Welcome to the Home Page!'),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0
+                    ),
+                    controller: _fullNameController,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Color(0x80D9D9D9),
+                      labelStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                      border: OutlineInputBorder(),
+                      hintText: 'Full Name',
+                      hintStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.width * 0.04),
+                  TextField(
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0
+                    ),
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Color(0x80D9D9D9),
+                      labelStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                      border: OutlineInputBorder(),
+                      hintText: 'Email',
+                      hintStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.width * 0.04),
+                  TextField(
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0
+                    ),
+                    controller: _passwordController,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Color(0x80D9D9D9),
+                      labelStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                      border: OutlineInputBorder(),
+                      hintText: 'Password',
+                      hintStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  OutlinedButton(
+                    onPressed: _signup,
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: Color(0x80D9D9D9),
+                      minimumSize: Size(MediaQuery.of(context).size.width * 0.4,
+                          MediaQuery.of(context).size.width * 0.13),
+                    ),
+                    child: const Text(
+                      'Sign Up',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

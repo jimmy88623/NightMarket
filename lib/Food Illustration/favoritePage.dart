@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'like_provider.dart';
+import 'Food_Widget.dart';
 
 class LikedItemsPage extends StatefulWidget {
   @override
@@ -36,29 +37,29 @@ class _LikedItemsPageState extends State<LikedItemsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Liked Items'),
-      ),
-      body: Consumer<LikeProvider>(
-        builder: (context, likeProvider, child) {
-          List<String> likedItems = likeProvider.likedItems.keys
-              .where((key) => likeProvider.likedItems[key] == true)
-              .toList();
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Consumer<LikeProvider>(
+          builder: (context, likeProvider, child) {
+            List<String> likedItems = likeProvider.likedItems.keys
+                .where((key) => likeProvider.likedItems[key] == true)
+                .toList();
 
-          return ListView.builder(
-            itemCount: likedItems.length,
-            itemBuilder: (context, index) {
-              String key = likedItems[index];
-              return ListTile(
-                title: Text(key),
-                trailing: IconButton(
-                  icon: Icon(Icons.star),
-                  onPressed: () => likeProvider.toggleLikedStatus(key),
-                ),
-              );
-            },
-          );
-        },
+            return ListView.builder(
+              itemCount: likedItems.length,
+              itemBuilder: (context, index) {
+                String key = likedItems[index];
+                return ListTile(
+                  title: Text(key),
+                  trailing: IconButton(
+                    icon: Icon(Icons.star),
+                    onPressed: () => likeProvider.toggleLikedStatus(key),
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
