@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:nightmarket/SpeechToPage/SpeechRecognitionPage.dart';
+import 'package:nightmarket/SpeechToTextPage/SpeechRecognitionPage.dart';
 
 
 class SearchPage extends StatefulWidget {
@@ -22,14 +22,24 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _controller = TextEditingController();
 
 
-  // 載入資料(DLI and DA)
+
   Future<Map<String, dynamic>> loadData() async {
-    String jsonSEARCHString = await rootBundle.loadString(
-        'assets/data/SEARCH.json');
-    Map<String, dynamic> data = {
-      "SEARCH": jsonDecode(jsonSEARCHString),
-    };
+    String jsonfood_cnString = await rootBundle.loadString(
+        'assets/data/food_cn.json');
+    Map<String, dynamic> data = json.decode(jsonfood_cnString);
+    // Map<String, dynamic> data = {
+    //   "food_cn": jsonDecode(jsonfood_cnString),
+    // };
+    var food_cn_nameList = data.keys.toList();
+    print(food_cn_nameList);
+    print(data);
     return data;
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    loadData();
   }
 
   @override
@@ -117,6 +127,7 @@ class _SearchPageState extends State<SearchPage> {
                     controller: _controller,
                     onChanged: (value) {
                       keyWord = value;
+                      print("Keyword"+keyWord);
                     }, //onChanged,只要輸入內容有改變就會觸發
                   ),
               ),
@@ -128,24 +139,34 @@ class _SearchPageState extends State<SearchPage> {
                 builder: (BuildContext context,
                     AsyncSnapshot<Map<String, dynamic>> snapshot) {
                   if (snapshot.hasData) {
-                    final data = snapshot.data;
+                    final data = snapshot.data!;
+
+                    Map<String, dynamic> food_cn_data = {};
+
+                    data.forEach((key, value) {
+                      food_cn_data = value;
+                    });
+                    var food_cn_nameList = data.keys.toList();
 
                     // 判斷是否有點擊搜尋
-                    List<dynamic> newData = [];
+                    List newKey = [];
+                    Map<String, dynamic> newData = {};
                     if (keyWord != "") {
-                      for (int i = 0; i < data!['SEARCH'].length; i++) {
-                        if (data['SEARCH'][i]['食物名稱'].contains(keyWord) ||
-                            data['SEARCH'][i]['內容物'].contains(keyWord)) {
-                          newData.add(data['SEARCH'][i]);
+                      for (int i = 0; i < food_cn_nameList.length; i++) {
+                        if (food_cn_nameList[i].contains(keyWord)) {
+                          var newMap = data[food_cn_nameList[i]];
+                          newKey.add(food_cn_nameList[i]);
+                          newData.addAll(newMap);
                         }
                       }
-                      data!['SEARCH'] = newData;
+                      newData.addAll(data);
+                      // data['food_cn'] = newData;
                     }
 
                     // 重要 ListView.builder
                     return ListView.builder(
-                      itemCount: newData.length,
-                      // itemCount: data!["SEARCH"].length,
+                      itemCount: newKey.length,
+
                       itemBuilder: (BuildContext context, int index) {
                         // 重要 手勢感測元件
                         return GestureDetector(
@@ -163,7 +184,8 @@ class _SearchPageState extends State<SearchPage> {
                           // },
                           // 重要 在App上要顯示的內容
                           child: CardWidget(
-                              item: data!['SEARCH'][index]),
+                              newKey: newKey[index],
+                              newData: data[newKey[index]]),
                         );
                       },
                     );
@@ -185,19 +207,25 @@ class _SearchPageState extends State<SearchPage> {
 
 class CardWidget extends StatelessWidget {
   const CardWidget(          //const來修飾建構式，若帶入的引數相同，在建立類別實例時，這些類別實例會被指向在同一個記憶體位置上。
-          {Key? key, required this.item})
+          {Key? key, required this.newKey, required this.newData})
       : super(key: key);
 
-
-  final Map<String, dynamic> item;  //屬性前方加上 final：代表屬性是由建構式傳入，在類別內無法被修改。
+  final String newKey;
+  final dynamic newData;  //屬性前方加上 final：代表屬性是由建構式傳入，在類別內無法被修改。
 
   @override
   Widget build(BuildContext context) {
+    // var search_data = {};
+    //
+    // item!['food_cn'].forEach((key, value) {
+    //   search_data.addAll(value);
+    // });
+    // var search_data_nameList = newData.keys.toList();
     return Card(
       child: Expanded(
         child: ListTile(
-          title: Text(item['食物名稱']),
-          subtitle: Text(item['內容物']),
+          title: Text('$newKey'),
+          subtitle: Text('tt'),
         ),
       ),
     );
