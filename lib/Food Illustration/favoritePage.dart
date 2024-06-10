@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:nightmarket/Food%20Illustration/FoodDetail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'like_provider.dart';
-import 'Food_Widget.dart';
-
 class LikedItemsPage extends StatefulWidget {
   @override
   _LikedItemsPageState createState() => _LikedItemsPageState();
@@ -49,11 +48,30 @@ class _LikedItemsPageState extends State<LikedItemsPage> {
               itemCount: likedItems.length,
               itemBuilder: (context, index) {
                 String key = likedItems[index];
-                return ListTile(
-                  title: Text(key),
-                  trailing: IconButton(
-                    icon: Icon(Icons.star),
-                    onPressed: () => likeProvider.toggleLikedStatus(key),
+                Map<String, dynamic>? item = likeProvider.getItem(key);
+                print("item: $item");
+                String anotherName = item?['another_name'] ?? 'No name available';
+
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FoodDetailPage(
+                          item: likeProvider.getItem(key)!, // 获取项目数据
+                          itemKey: key,
+                          language: 'chinese', // 这里填入合适的语言参数
+                        ),
+                      ),
+                    );
+                  },
+                  child: ListTile(
+                    title: Text(key),
+                    subtitle: Text(anotherName), // 显示 another_name
+                    trailing: IconButton(
+                      icon: Icon(Icons.star),
+                      onPressed: () => likeProvider.toggleLikedStatus(key),
+                    ),
                   ),
                 );
               },
