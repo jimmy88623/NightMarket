@@ -60,7 +60,7 @@ class _LikedItemsPageState extends State<LikedItemsPage> {
                         builder: (context) => FoodDetailPage(
                           item: likeProvider.getItem(key)!, // 获取项目数据
                           itemKey: key,
-                          language: 'chinese', // 这里填入合适的语言参数
+                          // language: 'chinese', // 这里填入合适的语言参数
                         ),
                       ),
                     );

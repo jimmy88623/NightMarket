@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:nightmarket/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,13 +10,12 @@ import 'like_provider.dart';
 class FoodDetailPage extends StatefulWidget {
   final Map<String, dynamic> item;
   final String itemKey;
-  final String language;
+  // final String language;
 
   const FoodDetailPage({
     Key? key,
     required this.item,
     required this.itemKey,
-    required this.language,
   }) : super(key: key);
 
   @override
@@ -22,23 +24,34 @@ class FoodDetailPage extends StatefulWidget {
 
 class _FoodDetailPageState extends State<FoodDetailPage> {
   late Future<void> _likeProviderFuture;
-
+  late Map<String,dynamic> remindItems;
   @override
   void initState() {
     super.initState();
     _likeProviderFuture = _initializeLikeProvider();
+    loadJsonData();
+  }
+
+  Future<void> loadJsonData() async {
+    // 加載並讀取 test.json 文件
+    String jsonData = await rootBundle.loadString('assets/remind.json');
+    setState(() {
+      remindItems = json.decode(jsonData);
+    });
   }
 
   Future<void> _initializeLikeProvider() async {
     final likeProvider = Provider.of<LikeProvider>(context, listen: false);
-    if (!likeProvider.likedItems.containsKey(widget.itemKey)) {
-      await likeProvider.addItem(widget.itemKey, false, widget.item); // 初始化为未喜欢，并传入item数据
-    }
+    likeProvider.addItem(widget.itemKey, widget.item);
+    // if (!likeProvider.likedItems.containsKey(widget.itemKey)) {
+    //   await likeProvider.addItem(widget.itemKey, false, widget.item); // 初始化为未喜欢，并传入item数据
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
     print("傳進來的食物有:${widget.itemKey}");
+    print(widget.item);
     return Theme(
       data: Provider.of<ThemeProvider>(context).themeData,
       child: Scaffold(
@@ -71,7 +84,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
               children: [
                 widget.item['img_url'].isNotEmpty
                     ? ClipOval(
-                  child: Image.network(
+                  child: Image.asset(
                     widget.item['img_url'],
                     fit: BoxFit.contain,
                     width: 100,
@@ -144,6 +157,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: widget.item['remind'].map<Widget>((remindItem) {
+                        bool isLastItem = remindItem == widget.item['remind'].last;
                         return GestureDetector(
                           onTap: () {
                             showDialog(
@@ -157,12 +171,12 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                                     children: [
                                       Text(remindItem),
                                       const SizedBox(height: 10),
-                                      Image.network(widget.item['img_url']),
+                                      Image.network(remindItems[remindItem]['img_url']),
                                       const SizedBox(height: 10),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Text("不要"+remindItem),
+                                          Text("不要"+remindItems[remindItem]['another_name']),
                                           IconButton(
                                             onPressed: (){},
                                             icon: const Icon(Icons.volume_down),
@@ -187,7 +201,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                             );
                           },
                           child: Text(
-                            remindItem+' ',
+                            remindItem + (isLastItem ? '' : ' 、'),
                             style: const TextStyle(fontSize: 20),
                           ),
                         );

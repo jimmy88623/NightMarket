@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:nightmarket/Food Illustration/FoodDetail.dart';
+import 'package:nightmarket/Food%20Illustration/like_provider.dart';
+import 'package:provider/provider.dart';
+
 class FoodWidget extends StatefulWidget {
-  final Map<String, dynamic> cn_foodItems;
+  // final Map<String, dynamic> cn_foodItems;
   final Map<String, dynamic> jp_foodItems;
   final String keyword;
-
   const FoodWidget(
-      {Key? key,
-      required this.keyword,
-      required this.cn_foodItems,
-      required this.jp_foodItems})
+      {Key? key, required this.keyword, required this.jp_foodItems})
       : super(key: key);
 
   @override
@@ -20,13 +19,16 @@ class _FoodWidgetState extends State<FoodWidget> {
   final SearchController searchController = SearchController();
   late Map<String, dynamic> foodItems;
   late List<String> filteredItems;
-  String dropdownValue = "Chinese";
   String searchFood = "";
 
   @override
   void initState() {
     super.initState();
-    foodItems = widget.cn_foodItems; // 初始时默认使用中国食物项目
+    final likeProvider = Provider.of<LikeProvider>(context, listen: false);
+    foodItems = widget.jp_foodItems;
+    foodItems.forEach((key, value) {
+      likeProvider.addItem(key, value);
+    });
     _filterItems();
     searchController.addListener(() {
       setState(() {
@@ -38,14 +40,13 @@ class _FoodWidgetState extends State<FoodWidget> {
   @override
   void didUpdateWidget(FoodWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.cn_foodItems != widget.cn_foodItems ||
-        oldWidget.jp_foodItems != widget.jp_foodItems ||
+    if (oldWidget.jp_foodItems != widget.jp_foodItems ||
         oldWidget.keyword != widget.keyword) {
-      if (dropdownValue == "Chinese") {
-        foodItems = widget.cn_foodItems;
-      } else {
-        foodItems = widget.jp_foodItems;
-      }
+      // if (dropdownValue == "Chinese") {
+      //   foodItems = widget.cn_foodItems;
+      // } else {
+      //   foodItems = widget.jp_foodItems;
+      // }
       _filterItems();
     }
   }
@@ -77,33 +78,33 @@ class _FoodWidgetState extends State<FoodWidget> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            DropdownButton(
-              value: dropdownValue,
-              icon: Icon(Icons.menu),
-              onChanged: (value) {
-                setState(() {
-                  dropdownValue = value!;
-                  if (dropdownValue == "Chinese") {
-                    foodItems = widget.cn_foodItems;
-                    _filterItems();
-                  } else {
-                    foodItems = widget.jp_foodItems;
-                    _filterItems();
-                  }
-                  print("foodItems : $foodItems");
-                });
-              },
-              items: const [
-                DropdownMenuItem(
-                  child: Text('Chinese'),
-                  value: 'Chinese',
-                ),
-                DropdownMenuItem(
-                  child: Text('Japanese'),
-                  value: 'Japanese',
-                )
-              ],
-            ),
+            // DropdownButton(
+            //   value: dropdownValue,
+            //   icon: Icon(Icons.menu),
+            //   onChanged: (value) {
+            //     setState(() {
+            //       dropdownValue = value!;
+            //       if (dropdownValue == "Chinese") {
+            //         foodItems = widget.cn_foodItems;
+            //         _filterItems();
+            //       } else {
+            //         foodItems = widget.jp_foodItems;
+            //         _filterItems();
+            //       }
+            //       print("foodItems : $foodItems");
+            //     });
+            //   },
+            //   items: const [
+            //     DropdownMenuItem(
+            //       child: Text('Chinese'),
+            //       value: 'Chinese',
+            //     ),
+            //     DropdownMenuItem(
+            //       child: Text('Japanese'),
+            //       value: 'Japanese',
+            //     )
+            //   ],
+            // ),
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
               child: SearchBar(
@@ -116,7 +117,13 @@ class _FoodWidgetState extends State<FoodWidget> {
                     // 搜索图标按钮
                   },
                 ),
-                hintText: 'Search...',
+                trailing: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.mic),
+                  )
+                ],
+                hintText: '今日は何を食べようかな〜',
               ),
             ),
             GridView.builder(
@@ -130,10 +137,10 @@ class _FoodWidgetState extends State<FoodWidget> {
               ),
               itemCount: displayedItems.length,
               itemBuilder: (context, index) {
-                print("displayItems : $displayedItems");
+                // print("displayItems : $displayedItems");
                 final key = displayedItems[index];
                 final item = foodItems[key];
-                print(" index : $index  is  ${item}");
+                // print(" index : $index  is  ${item}");
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -147,7 +154,6 @@ class _FoodWidgetState extends State<FoodWidget> {
                               builder: (context) => FoodDetailPage(
                                 item: item,
                                 itemKey: key,
-                                language: dropdownValue,
                               ),
                             ),
                           );
@@ -162,7 +168,7 @@ class _FoodWidgetState extends State<FoodWidget> {
                                   height:
                                       MediaQuery.of(context).size.width * 0.1,
                                 )
-                              : Image.network(
+                              : Image.asset(
                                   item['img_url'],
                                   fit: BoxFit.cover,
                                   width:

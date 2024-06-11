@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:nightmarket/Camera/testcamera.dart';
 import 'package:nightmarket/Food Illustration/food.dart';
-import 'package:nightmarket/Home/menu.dart';
+import 'package:nightmarket/Home/home.dart';
 import 'package:nightmarket/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:nightmarket/Camera/camera.dart';
+import 'package:nightmarket/Setting/setting.dart';
 
 class ButtonbarPage extends StatefulWidget {
   const ButtonbarPage({super.key});
@@ -17,10 +17,10 @@ class _ButtonbarPageState extends State<ButtonbarPage> {
   int _currentPageIndex = 0;
 
   final List<Widget> _pages = [
-    Menu(),
+    Home(),
     Food(),
     TestCamera(),
-    Placeholder(),
+    Set(),
   ];
 
   void _onPageChanged(int index) {

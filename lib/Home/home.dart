@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:nightmarket/Home/home.dart';
 import 'package:nightmarket/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -75,10 +73,28 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeProvider>(context).themeData,
       home: Scaffold(
+        appBar: PreferredSize(
+          preferredSize:
+          Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
+          child: AppBar(
+            flexibleSpace: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.25, // 调整高度以确保图片适合
+              width: double.infinity,
+              child: Image.asset(
+                'assets/title_bottom.png',
+                fit: BoxFit.contain,
+              ),
+            ),
+            backgroundColor: themeProvider.themeData.appBarTheme.backgroundColor,
+            iconTheme: themeProvider.themeData.appBarTheme.iconTheme ,
+            titleTextStyle: themeProvider.themeData.appBarTheme.titleTextStyle,
+          ),
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [

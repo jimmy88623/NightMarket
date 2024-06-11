@@ -26,18 +26,17 @@ class LikeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addItem(String key, bool liked, Map<String, dynamic> item) async {
-    print("key is $key");
-    print("item is $item");
+  Future<void> addItem(String key, Map<String, dynamic> item) async {
+
     final SharedPreferences prefs = await pres;
-    _likedItems[key] = liked;
+    // _likedItems[key] = liked;
     _items[key] = item;
 
     // 序列化并保存 item 数据
     String itemJson = jsonEncode(item);
     prefs.setString('${key}_item', itemJson);
 
-    prefs.setBool(key, liked);
+    // prefs.setBool(key, liked);
     List<String> itemKeys = prefs.getStringList('itemKeys') ?? [];
     if (!itemKeys.contains(key)) {
       itemKeys.add(key);
@@ -49,6 +48,7 @@ class LikeProvider with ChangeNotifier {
 
   Future<void> toggleLikedStatus(String key) async {
     final SharedPreferences prefs = await pres;
+
     _likedItems[key] = !_likedItems[key]!;
     prefs.setBool(key, _likedItems[key]!);
     notifyListeners();

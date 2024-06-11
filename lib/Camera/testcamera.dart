@@ -20,14 +20,17 @@ class _TestCameraState extends State<TestCamera> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF5C81A0),
-
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Center(child: Text('看板を写真に撮って、認識してみませんか?',style: TextStyle(
+            fontSize: 18.0,
+            color: Colors.white,
+          ),)),
           Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.width*1.1,
+            height: MediaQuery.of(context).size.width*1.2,
             color: Colors.white,
             child: _selectedImage != null
                 ? Container(

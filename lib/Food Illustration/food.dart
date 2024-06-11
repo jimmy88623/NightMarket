@@ -70,9 +70,9 @@ class _FoodState extends State<Food> {
             ),
             body: TabBarView(
               children: [
-                FoodWidget(cn_foodItems: cn_foodItems,jp_foodItems: jp_foodItems,keyword: 'Salty',),
-                FoodWidget(cn_foodItems: cn_foodItems,jp_foodItems: jp_foodItems,keyword: 'Sweet',),
-                FoodWidget(cn_foodItems: cn_foodItems,jp_foodItems: jp_foodItems,keyword: 'Drink',),
+                FoodWidget(jp_foodItems: jp_foodItems,keyword: 'Salty',),
+                FoodWidget(jp_foodItems: jp_foodItems,keyword: 'Sweet',),
+                FoodWidget(jp_foodItems: jp_foodItems,keyword: 'Drink',),
                 LikedItemsPage(),
               ],
             ),

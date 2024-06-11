@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nightmarket/ButtonBar/buttonbar.dart';
+import 'package:nightmarket/Food%20Illustration/like_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
         SnackBar(content: Text(responseBody)),
       );
       if (responseBody == "登入成功") {
+        // Provider.of<LikeProvider>(context,listen: false).clearLikedItems();
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => ButtonbarPage()), // 跳转到主页
