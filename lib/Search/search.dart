@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:nightmarket/SpeechToTextPage/SpeechRecognitionPage.dart';
-
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -16,14 +16,13 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   String keyWord = "";
-  List<String> favoriteDrugNames = [];
-  List<String> indications = [];
-  List<String> favoriteDrugPicsURL = [];
   final TextEditingController _controller = TextEditingController();
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
+  String _text = '';
 
 
-
-  Future<Map<String, dynamic>> loadData() async {
+  Future<Map<String, dynamic>> loadData() async {                             //loaddata 目前是使用中文json
     String jsonfood_cnString = await rootBundle.loadString(
         'assets/data/food_cn.json');
     Map<String, dynamic> data = json.decode(jsonfood_cnString);
@@ -37,15 +36,45 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   @override
-  void initState(){
+  void initState(){                                                           //initState
     super.initState();
     loadData();
+    _speech = stt.SpeechToText();
+  }
+
+  void _listen() async{                                                       //語音辨識日文的function
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => print('onStatus: $val'),
+        onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          onResult: (val) =>
+              setState(() {
+                _text = val.recognizedWords;
+                _controller.text = "$_text";
+              }),
+          localeId: 'ja_JP',      //設置語言為日文
+        );
+      } else {
+        setState(() => _isListening = false);
+        _speech.stop();
+      }
+    }else{
+      setState(() => _isListening = false);
+      setState(() {
+              keyWord = _text;
+      });
+      _speech.stop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+        appBar: AppBar(                                                       //appbar
           backgroundColor: Colors.white,
           foregroundColor: Colors.deepOrange,
           title: Center(
@@ -66,20 +95,20 @@ class _SearchPageState extends State<SearchPage> {
         // 重要 FutureBuilder
         body: Column(
           children: [
-            Padding(
+            Padding(                                                          //搜索框設定
               padding: const EdgeInsets.only(top:20, left:16, right:16),
               child: Container(
                   child: TextField(
                     decoration: InputDecoration(
                       labelText: 'Search',
-                      enabledBorder: OutlineInputBorder(                              //還沒點擊時外框顏色
+                      enabledBorder: OutlineInputBorder(                              //還沒點擊時搜索框顏色
                           borderRadius: BorderRadius.all(Radius.circular(50)),
                           borderSide: BorderSide(
                               color: Colors.indigo,
                               width:3
                           )
                       ),
-                      focusedBorder:  OutlineInputBorder(                             //點擊時外框顏色
+                      focusedBorder:  OutlineInputBorder(                             //點擊時搜索框顏色
                           borderRadius: BorderRadius.all(Radius.circular(50)),
                           borderSide: BorderSide(
                               color: Colors.indigo,
@@ -96,24 +125,18 @@ class _SearchPageState extends State<SearchPage> {
                       suffixIcon: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            IconButton(
-                                onPressed: () async{
-                                  final result = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const SpeechRecognitionPage(),
-                                    ),
-                                  );
-                                  if (result != null){
-                                    setState(() {
-                                      keyWord = result;
-                                      _controller.text = "$result";
-                                    });
-                                  }
-                                }, // 刷新
+                            IconButton(                                                        //mic icon
+                                onPressed: _listen,
+                                //   if (result != null){
+                                //     setState(() {
+                                //       keyWord = result;
+                                //       _controller.text = "$result";
+                                //     });
+                                //   }
+                                // }, // 刷新
                                 color: Colors.deepOrange,
-                                icon: Icon(Icons.mic)),
-                            IconButton(
+                                icon: Icon(_isListening? Icons.mic :Icons.mic_none)),
+                            IconButton(                                                       //search icon
                                 onPressed: () {
                                   setState(() {
                                     // 刷新
@@ -149,26 +172,29 @@ class _SearchPageState extends State<SearchPage> {
                     var food_cn_nameList = data.keys.toList();
 
                     // 判斷是否有點擊搜尋
-                    List newKey = [];
+                    List<String> newKey = [];
                     Map<String, dynamic> newData = {};
                     if (keyWord != "") {
                       for (int i = 0; i < food_cn_nameList.length; i++) {
-                        if (food_cn_nameList[i].contains(keyWord)) {
-                          var newMap = data[food_cn_nameList[i]];
-                          newKey.add(food_cn_nameList[i]);
+                        var foodName = food_cn_nameList[i];
+                        if (foodName.contains(keyWord) ||
+                            data['$foodName']['key_word'].contains(keyWord)){
+                          print(data['$foodName']['key_word']);
+                          var newMap = data['$foodName'];
+                          newKey.add(foodName);
                           newData.addAll(newMap);
                         }
                       }
-                      newData.addAll(data);
+                      food_cn_nameList = newKey;
                       // data['food_cn'] = newData;
                     }
 
-                    // 重要 ListView.builder
-                    return ListView.builder(
+
+                    return ListView.builder(                                //搜尋框下方，要改成圖鑑
                       itemCount: newKey.length,
 
                       itemBuilder: (BuildContext context, int index) {
-                        // 重要 手勢感測元件
+
                         return GestureDetector(
                           onTap: () {},
                           // onTap: () {
@@ -182,7 +208,7 @@ class _SearchPageState extends State<SearchPage> {
                           //     ),
                           //   );
                           // },
-                          // 重要 在App上要顯示的內容
+
                           child: CardWidget(
                               newKey: newKey[index],
                               newData: data[newKey[index]]),
@@ -203,15 +229,15 @@ class _SearchPageState extends State<SearchPage> {
   }
 }
 
-
+                                                                          //下面可以刪掉
 
 class CardWidget extends StatelessWidget {
-  const CardWidget(          //const來修飾建構式，若帶入的引數相同，在建立類別實例時，這些類別實例會被指向在同一個記憶體位置上。
+  const CardWidget(
           {Key? key, required this.newKey, required this.newData})
       : super(key: key);
 
   final String newKey;
-  final dynamic newData;  //屬性前方加上 final：代表屬性是由建構式傳入，在類別內無法被修改。
+  final dynamic newData;
 
   @override
   Widget build(BuildContext context) {
