@@ -22,15 +22,15 @@ class _SearchPageState extends State<SearchPage> {
   String _text = '';
 
 
-  Future<Map<String, dynamic>> loadData() async {                             //loaddata 目前是使用中文json
-    String jsonfood_cnString = await rootBundle.loadString(
-        'assets/data/food_cn.json');
-    Map<String, dynamic> data = json.decode(jsonfood_cnString);
+  Future<Map<String, dynamic>> loadData() async {                             //loaddata 目前是使用中文json，這裡可以改成日文json
+    String jsonfood_jpString = await rootBundle.loadString(
+        'assets/data/food_jp.json');
+    Map<String, dynamic> data = json.decode(jsonfood_jpString);
     // Map<String, dynamic> data = {
     //   "food_cn": jsonDecode(jsonfood_cnString),
     // };
-    var food_cn_nameList = data.keys.toList();
-    print(food_cn_nameList);
+    var food_jp_nameList = data.keys.toList();
+    print(food_jp_nameList);
     print(data);
     return data;
   }
@@ -156,7 +156,7 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
 
-            Expanded(
+            Expanded(                                                           //搜尋功能，也可以搜['key_word']
               child: FutureBuilder<Map<String, dynamic>>(
                 future: loadData(),
                 builder: (BuildContext context,
@@ -164,19 +164,19 @@ class _SearchPageState extends State<SearchPage> {
                   if (snapshot.hasData) {
                     final data = snapshot.data!;
 
-                    Map<String, dynamic> food_cn_data = {};
+                    Map<String, dynamic> food_jp_data = {};
 
                     data.forEach((key, value) {
-                      food_cn_data = value;
+                      food_jp_data = value;
                     });
-                    var food_cn_nameList = data.keys.toList();
+                    var food_jp_nameList = data.keys.toList();
 
                     // 判斷是否有點擊搜尋
                     List<String> newKey = [];
                     Map<String, dynamic> newData = {};
                     if (keyWord != "") {
-                      for (int i = 0; i < food_cn_nameList.length; i++) {
-                        var foodName = food_cn_nameList[i];
+                      for (int i = 0; i < food_jp_nameList.length; i++) {
+                        var foodName = food_jp_nameList[i];
                         if (foodName.contains(keyWord) ||
                             data['$foodName']['key_word'].contains(keyWord)){
                           print(data['$foodName']['key_word']);
@@ -185,7 +185,7 @@ class _SearchPageState extends State<SearchPage> {
                           newData.addAll(newMap);
                         }
                       }
-                      food_cn_nameList = newKey;
+                      food_jp_nameList = newKey;
                       // data['food_cn'] = newData;
                     }
 
