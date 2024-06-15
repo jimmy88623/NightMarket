@@ -1,105 +1,177 @@
-import 'dart:async';
-import 'dart:typed_data';
+import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
+import 'dart:typed_data';
 
-class Camera extends StatelessWidget {
+class Camera extends StatefulWidget {
+  const Camera({super.key});
+
+  @override
+  State<Camera> createState() => _CameraState();
+}
+
+class _CameraState extends State<Camera> {
+  File? _selectedImage;
+  Uint8List? _processedImage;
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CameraScreen(),
+    return Scaffold(
+      backgroundColor: const Color(0xFF5C81A0),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+              child: Text(
+                '看板を写真に撮って、認識してみませんか?',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.white,
+                ),
+              )),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.width * 1.2,
+            color: Colors.white,
+            child: _processedImage != null
+                ? Image.memory(
+              _processedImage!,
+              fit: BoxFit.cover,
+            )
+                : (_selectedImage != null
+                ? Image.file(
+              _selectedImage!,
+              fit: BoxFit.cover,
+            )
+                : const Text('')),
+          ),
+          SizedBox(
+            height: 50,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle, color: Color(0xFF666666)),
+                child: IconButton(
+                    icon: Icon(
+                      Icons.collections,
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                    onPressed: () {
+                      _pickImageFromGallery();
+                    }),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle, color: Color(0xFF666666)),
+                child: IconButton(
+                    icon: Icon(
+                      Icons.camera_alt,
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                    onPressed: () {
+                      _pickImageFromCamera();
+                    }),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle, color: Color(0xFF666666)),
+                child: IconButton(
+                    icon: Icon(
+                      Icons.translate,
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                    onPressed: () {
+                      _uploadImage();
+                    }),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle, color: Color(0xFF666666)),
+                child: IconButton(
+                    icon: Icon(
+                      Icons.refresh,
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                    onPressed: () {
+                      _clearImage();
+                    }),
+              ),
+            ],
+          ),
+
+          // const SizedBox(
+          //   height: 20,
+          // ),
+        ],
+      ),
     );
   }
-}
 
-class CameraScreen extends StatefulWidget {
-  @override
-  _CameraScreenState createState() => _CameraScreenState();
-}
-
-class _CameraScreenState extends State<CameraScreen> {
-  CameraController? _controller;
-  Future<void>? _initializeControllerFuture;
-  File? _image;
-  Uint8List? _processedImageBytes;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeCamera();
+  Future _pickImageFromGallery() async {
+    final returnedImage =
+    await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (returnedImage == null) return;
+    setState(() {
+      _processedImage = null;
+      _selectedImage = File(returnedImage.path);
+      print("_selectedImage : $_selectedImage ");
+    });
   }
 
-  Future<void> _initializeCamera() async {
-    final cameras = await availableCameras();
-    final firstCamera = cameras.first;
+  Future _pickImageFromCamera() async {
+    final returnedImage =
+    await ImagePicker().pickImage(source: ImageSource.camera);
+    if (returnedImage == null) return;
 
-    _controller = CameraController(
-      firstCamera,
-      ResolutionPreset.high,
-    );
-
-    _initializeControllerFuture = _controller!.initialize();
-    if (mounted) {
-      setState(() {});
-    }
+    setState(() {
+      _processedImage = null;
+      _selectedImage = File(returnedImage.path);
+    });
   }
 
-  Future<void> _takePicture() async {
-    if (_controller == null || !_controller!.value.isInitialized) {
-      return;
-    }
-
-    try {
-      await _initializeControllerFuture;
-
-      final image = await _controller!.takePicture();
-
-      setState(() {
-        _image = File(image.path);
-      });
-
-      // 读取图像并旋转
-      final originalImage = img.decodeImage(await _image!.readAsBytes());
-      final fixedImage = img.copyRotate(originalImage!, 90); // 旋转90度
-
-      // 缩放图像以匹配预览框的大小
-      final resizedImage = img.copyResize(fixedImage, width: 400, height: 400); // 调整大小为预览框的大小
-
-      // 将调整后的图像写入文件
-      final resizedImageFile = await _image!.writeAsBytes(img.encodeJpg(resizedImage));
-
-      setState(() {
-        _image = resizedImageFile;
-      });
-
-      _uploadImage();
-    } catch (e) {
-      print(e);
-    }
+  void _clearImage() {
+    setState(() {
+      _selectedImage = null;
+      _processedImage = null;
+    });
   }
+  List<dynamic> cnList = [];
+  List<dynamic> jnList = [];
 
-  Future<void> _uploadImage() async {
-    if (_image == null) return;
+  Future _uploadImage() async {
+    if (_selectedImage == null) return;
 
-    final request = http.MultipartRequest('POST', Uri.parse('http://10.0.2.2:5000/process_image'));
-    request.files.add(await http.MultipartFile.fromPath('file', _image!.path));
+    final request = http.MultipartRequest('POST', Uri.parse('http://192.168.50.18:5005/process_image'));
+    request.files.add(await http.MultipartFile.fromPath('file', _selectedImage!.path));
     final response = await request.send();
-
     if (response.statusCode == 200) {
       final bytes = await response.stream.toBytes();
       setState(() {
-        _processedImageBytes = bytes;
+        _processedImage = bytes;
       });
-
-      // 显示结果对话框
       _showResultDialog();
     } else {
-      setState(() {
-        _processedImageBytes = null;
-      });
+      print('Failed to upload image: ${response.statusCode}');
     }
   }
 
@@ -107,11 +179,20 @@ class _CameraScreenState extends State<CameraScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        double dialogWidth = MediaQuery.of(context).size.width;
         return AlertDialog(
-          title: Text('OCR 翻譯結果'),
-          content: SingleChildScrollView(
-            child: _processedImageBytes != null
-                ? Image.memory(_processedImageBytes!)
+          title: Center(child: Text('Translated Result')),
+          content: Container(
+            width: dialogWidth,
+            height: dialogWidth*0.8,
+            child: _processedImage != null
+                ? Container(
+              child: Image.memory(
+                _processedImage!,
+                fit: BoxFit.cover,
+              ),
+              width: double.infinity,
+            )
                 : Text('無法顯示翻譯結果'),
           ),
           actions: <Widget>[
@@ -126,72 +207,4 @@ class _CameraScreenState extends State<CameraScreen> {
       },
     );
   }
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('OCR 翻譯 Demo'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Stack(
-              children: [
-                FutureBuilder<void>(
-                  future: _initializeControllerFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return Center(
-                        child: Container(
-                          // width: 400,
-                          // height: 400,
-                          child: ClipRect(
-                            child: OverflowBox(
-                              alignment: Alignment.center,
-                              child: FittedBox(
-                                fit: BoxFit.contain, // 調整圖片比例
-                                child: Container(
-                                  width: 350,
-                                  height: 350,
-                                  child: CameraPreview(_controller!),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  },
-                ),
-                Center(
-                  child: Container(
-                    width: 400,
-                    height: 400,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.red, width: 2),
-                      borderRadius: BorderRadius.circular(50), // 圆角半径为20
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          ElevatedButton(
-            onPressed: _takePicture,
-            child: Text('拍攝圖片'),
-          ),
-        ],
-      ),
-    );
-  }
 }
-

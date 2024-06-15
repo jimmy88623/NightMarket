@@ -23,7 +23,7 @@ class _SetState extends State<Set> {
         theme: Provider.of<ThemeProvider>(context).themeData,
         home: Scaffold(
           appBar: AppBar(
-            title: Center(child: Text('Settings')),
+            title:Image.asset('assets/night_market_logo.png',fit: BoxFit.contain,)
           ),
           body: SettingsList(
             sections: [

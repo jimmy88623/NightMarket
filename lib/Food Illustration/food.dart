@@ -66,7 +66,7 @@ class _FoodState extends State<Food> {
                   Tab(icon:Text('Favorite')),
                 ],
               ),
-              title: const Text('Night Market Food'),
+              title: Image.asset('assets/night_market_logo.png',fit: BoxFit.contain,),
             ),
             body: TabBarView(
               children: [

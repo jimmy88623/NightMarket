@@ -1,34 +1,34 @@
 {
   "酸キャベツ": {
     "another_name": "酸高麗菜",
-    "img_url": "https://i.imgur.com/5lDPdli.png"
+    "img_url": "assets/remind/酸高麗菜.png"
   },
   "パクチー": {
     "another_name": "香菜",
-    "img_url": "https://i.imgur.com/cWGFUdp.png"
+    "img_url": "assets/remind/香菜.png"
   },
   "九層塔": {
     "another_name": "九層塔",
-    "img_url": "https://i.imgur.com/YqR9Hqe.png"
+    "img_url": "assets/remind/九層塔.png"
   },
   "チリソース": {
     "another_name": "辣椒醬",
-    "img_url": "https://i.imgur.com/c0VyCdV.png"
+    "img_url": "assets/remind/辣椒醬.png"
   },
   "辛い粉": {
     "another_name": "辣椒粉",
-    "img_url": "https://i.imgur.com/Vq956tt.png"
+    "img_url": "assets/remind/辣椒粉.png"
   },
   "ピーナッツパウダー": {
     "another_name": "花生粉",
-    "img_url": "https://i.imgur.com/fi8cZ3B.png"
+    "img_url": "assets/remind/花生粉.png"
   },
   "砂糖": {
     "another_name": "糖",
-    "img_url": "https://i.imgur.com/OCrV27C.png"
+    "img_url": "assets/remind/糖.png"
   },
   "アイスキューブ": {
     "another_name": "冰塊",
-    "img_url": "https://i.imgur.com/XDQAcxy.png"
+    "img_url": "assets/remind/冰塊.png"
   }
 }

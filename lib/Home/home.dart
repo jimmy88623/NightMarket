@@ -10,13 +10,20 @@ class Home extends StatefulWidget {
   State<StatefulWidget> createState() => _HomeState();
 }
 
+// final List<String> imagePaths = [
+//   "assets/nightmarket1.jpg",
+//   "assets/nightmarket2.jpg",
+//   "assets/nightmarket3.jpg"
+// ];
 final List<String> imagePaths = [
-  "assets/nightmarket1.jpg",
-  "assets/nightmarket2.jpg",
-  "assets/nightmarket3.jpg"
+  "assets/大東夜市.png",
+  "assets/大東東夜市.png",
+  "assets/新永華夜市.png",
+  "assets/武聖夜市.png",
+  "assets/花園夜市.png"
 ];
 
-final List<String> captions = ["test 1 ","test 2 ","test 3 "];
+final List<String> captions = ["test 1 ", "test 2 ", "test 3 ","test 4","test 5"];
 late List<Widget> _pages;
 
 int _activePage = 0;
@@ -61,7 +68,10 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _pages = List.generate(imagePaths.length, (index) => ImageWithCaption(imagePath: imagePaths[index], caption: captions[index]));
+    _pages = List.generate(
+        imagePaths.length,
+        (index) => Image.asset(
+            imagePaths[index],fit: BoxFit.contain,));
     startTimer();
   }
 
@@ -80,7 +90,7 @@ class _HomeState extends State<Home> {
       home: Scaffold(
         appBar: PreferredSize(
           preferredSize:
-          Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
+              Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
           child: AppBar(
             flexibleSpace: SizedBox(
               height: MediaQuery.of(context).size.height * 0.25, // 调整高度以确保图片适合
@@ -90,8 +100,9 @@ class _HomeState extends State<Home> {
                 fit: BoxFit.contain,
               ),
             ),
-            backgroundColor: themeProvider.themeData.appBarTheme.backgroundColor,
-            iconTheme: themeProvider.themeData.appBarTheme.iconTheme ,
+            backgroundColor:
+                themeProvider.themeData.appBarTheme.backgroundColor,
+            iconTheme: themeProvider.themeData.appBarTheme.iconTheme,
             titleTextStyle: themeProvider.themeData.appBarTheme.titleTextStyle,
           ),
         ),
@@ -117,12 +128,14 @@ class _HomeState extends State<Home> {
                   ],
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height*0.02,),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.02,
+              ),
               Stack(
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width*0.95,
-                    height: MediaQuery.of(context).size.height / 3,
+                    width: MediaQuery.of(context).size.width * 0.95,
+                    height: MediaQuery.of(context).size.width * 0.95,
                     child: PageView.builder(
                       controller: _pageController,
                       itemCount: imagePaths.length,
@@ -146,7 +159,7 @@ class _HomeState extends State<Home> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List<Widget>.generate(
                           _pages.length,
-                              (index) => Padding(
+                          (index) => Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: InkWell(
                               onTap: () {
@@ -231,29 +244,28 @@ class ImageWithCaption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-        children: [
+      children: [
         Image.asset(
-        imagePath,
-        fit: BoxFit.cover,
+          imagePath,
+          fit: BoxFit.cover,
           width: double.infinity,
           height: double.infinity,
         ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              color: Colors.black.withOpacity(0.5),
-              child: Center(
-                child: Text(
-                  caption,
-                  style: TextStyle(fontSize: 24, color: Colors.white),
-                ),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            color: Colors.black.withOpacity(0.5),
+            child: Center(
+              child: Text(
+                caption,
+                style: TextStyle(fontSize: 24, color: Colors.white),
               ),
             ),
           ),
-        ],
+        ),
+      ],
     );
   }
 }
-

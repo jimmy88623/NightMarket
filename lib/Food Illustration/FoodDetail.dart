@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'like_provider.dart';
 
 class FoodDetailPage extends StatefulWidget {
+
   final Map<String, dynamic> item;
   final String itemKey;
   // final String language;
@@ -23,6 +24,7 @@ class FoodDetailPage extends StatefulWidget {
 }
 
 class _FoodDetailPageState extends State<FoodDetailPage> {
+
   late Future<void> _likeProviderFuture;
   late Map<String,dynamic> remindItems;
   @override
@@ -31,6 +33,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
     _likeProviderFuture = _initializeLikeProvider();
     loadJsonData();
   }
+
 
   Future<void> loadJsonData() async {
     // 加載並讀取 test.json 文件
@@ -125,8 +128,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                         },
                       ),
                       IconButton(
-                          onPressed: () {
-                          },
+                          onPressed: (){},
                           icon: Icon(Icons.volume_down)),
                     ],
                   ),
@@ -171,7 +173,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                                     children: [
                                       Text(remindItem),
                                       const SizedBox(height: 10),
-                                      Image.network(remindItems[remindItem]['img_url']),
+                                      Image.asset(remindItems[remindItem]['img_url']),
                                       const SizedBox(height: 10),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.center,

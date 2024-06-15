@@ -45,6 +45,7 @@ ThemeData lightmode = ThemeData(
 // ------------------------------------------------------------------------------------------------------
 ThemeData darkmode = ThemeData(
   brightness: Brightness.dark,
+
   searchBarTheme: SearchBarThemeData(
     backgroundColor: WidgetStateProperty.all(Colors.white) ,
     hintStyle: WidgetStateProperty.all(TextStyle(color: Colors.black)),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nightmarket/Camera/camera.dart';
 import 'package:nightmarket/Camera/testcamera.dart';
 import 'package:nightmarket/Food Illustration/food.dart';
 import 'package:nightmarket/Home/home.dart';
@@ -19,6 +20,7 @@ class _ButtonbarPageState extends State<ButtonbarPage> {
   final List<Widget> _pages = [
     Home(),
     Food(),
+    // Camera(),
     TestCamera(),
     Set(),
   ];

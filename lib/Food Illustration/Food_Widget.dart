@@ -1,7 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+// import 'package:flutter_sound/flutter_sound.dart';
+// import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:nightmarket/Food Illustration/FoodDetail.dart';
 import 'package:nightmarket/Food%20Illustration/like_provider.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class FoodWidget extends StatefulWidget {
   // final Map<String, dynamic> cn_foodItems;
@@ -20,7 +26,9 @@ class _FoodWidgetState extends State<FoodWidget> {
   late Map<String, dynamic> foodItems;
   late List<String> filteredItems;
   String searchFood = "";
-
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
+  String _text = '';
   @override
   void initState() {
     super.initState();
@@ -35,6 +43,39 @@ class _FoodWidgetState extends State<FoodWidget> {
         searchFood = searchController.text;
       });
     });
+    _speech = stt.SpeechToText();
+  }
+  @override
+  void dispose() {
+    super.dispose();
+  }
+  void _listen() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => print('onStatus: $val'),
+        onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          onResult: (val) {
+            setState(() {
+              _text = val.recognizedWords;
+              print("錄音文字辨識為: $_text");
+              searchController.text = _text;
+              _isListening = false;  // 在结果回调中更改状态
+            });
+            _speech.stop();  // 识别完成后停止监听
+          },
+          localeId: 'ja_JP',
+        );
+      } else {
+        setState(() => _isListening = false);
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
   }
 
   @override
@@ -42,11 +83,6 @@ class _FoodWidgetState extends State<FoodWidget> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.jp_foodItems != widget.jp_foodItems ||
         oldWidget.keyword != widget.keyword) {
-      // if (dropdownValue == "Chinese") {
-      //   foodItems = widget.cn_foodItems;
-      // } else {
-      //   foodItems = widget.jp_foodItems;
-      // }
       _filterItems();
     }
   }
@@ -78,39 +114,12 @@ class _FoodWidgetState extends State<FoodWidget> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            // DropdownButton(
-            //   value: dropdownValue,
-            //   icon: Icon(Icons.menu),
-            //   onChanged: (value) {
-            //     setState(() {
-            //       dropdownValue = value!;
-            //       if (dropdownValue == "Chinese") {
-            //         foodItems = widget.cn_foodItems;
-            //         _filterItems();
-            //       } else {
-            //         foodItems = widget.jp_foodItems;
-            //         _filterItems();
-            //       }
-            //       print("foodItems : $foodItems");
-            //     });
-            //   },
-            //   items: const [
-            //     DropdownMenuItem(
-            //       child: Text('Chinese'),
-            //       value: 'Chinese',
-            //     ),
-            //     DropdownMenuItem(
-            //       child: Text('Japanese'),
-            //       value: 'Japanese',
-            //     )
-            //   ],
-            // ),
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
               child: SearchBar(
                 controller: searchController,
-                padding: const WidgetStatePropertyAll<EdgeInsets>(
-                    EdgeInsets.symmetric(horizontal: 16.0)),
+                // padding: const WidgetStatePropertyAll<EdgeInsets>(
+                //     EdgeInsets.symmetric(horizontal: 16.0)),
                 leading: IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () {
@@ -119,11 +128,12 @@ class _FoodWidgetState extends State<FoodWidget> {
                 ),
                 trailing: [
                   IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.mic),
+                    onPressed: _listen,
+                    icon: Icon(_isListening? Icons.mic :Icons.mic_none),
                   )
                 ],
                 hintText: '今日は何を食べようかな〜',
+                hintStyle: WidgetStateProperty.all(TextStyle(color: Colors.blueGrey)),
               ),
             ),
             GridView.builder(
