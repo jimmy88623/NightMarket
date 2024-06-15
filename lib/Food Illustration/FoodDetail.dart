@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+// import 'package:flutter_tts/flutter_tts.dart';
 import 'package:nightmarket/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,7 +26,9 @@ class FoodDetailPage extends StatefulWidget {
 }
 
 class _FoodDetailPageState extends State<FoodDetailPage> {
-
+  // final speech = FlutterTts();
+  // bool isPlaying = false;
+  final FlutterTts flutterTts = FlutterTts();
   late Future<void> _likeProviderFuture;
   late Map<String,dynamic> remindItems;
   @override
@@ -34,7 +38,13 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
     loadJsonData();
   }
 
-
+  Future<void> speak(String text)async{
+    print(flutterTts.getLanguages);
+    await flutterTts.setLanguage('zh-CN');
+    await flutterTts.setPitch(1.0);
+    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.speak(text);
+  }
   Future<void> loadJsonData() async {
     // 加載並讀取 test.json 文件
     String jsonData = await rootBundle.loadString('assets/remind.json');
@@ -128,7 +138,27 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                         },
                       ),
                       IconButton(
-                          onPressed: (){},
+                        onPressed: (){
+                          speak(widget.item['another_name']);
+                        },
+                          // onPressed: ()async{
+                          //   if(isPlaying){
+                          //     await speech.pause();
+                          //   }
+                          //   else{
+                          //     await speech.setLanguage('en-US');
+                          //     await speech.setVolume(5);
+                          //     await speech.speak("hello");
+                          //   }
+                          //   setState(() {
+                          //     isPlaying = !isPlaying;
+                          //   });
+                          //   speech.setCompletionHandler((){
+                          //     setState(() {
+                          //       isPlaying = !isPlaying;
+                          //     });
+                          //   });
+                          // },
                           icon: Icon(Icons.volume_down)),
                     ],
                   ),
@@ -180,7 +210,10 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                                         children: [
                                           Text("不要"+remindItems[remindItem]['another_name']),
                                           IconButton(
-                                            onPressed: (){},
+                                            onPressed: (){
+                                              String text = "不要"+remindItems[remindItem]['another_name'];
+                                              speak(text);
+                                            },
                                             icon: const Icon(Icons.volume_down),
                                           ),
                                         ],
